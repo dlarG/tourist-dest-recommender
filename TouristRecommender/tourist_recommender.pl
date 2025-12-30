@@ -1,9 +1,3 @@
-% enhanced_tourist_recommender.pl - Enhanced Tourist Destination Recommender with Conversational Interface
-% Fixed version for GNU Prolog compatibility
-
-% ==================== ENHANCED FACTS DATABASE ====================
-
-% TOURIST DESTINATION FACTS with detailed single-day cost breakdown
 % Format: destination(Name, Type, Tags, Description, SingleDayCost)
 destination(boracay, beach, [beach, party, water_sports, luxury, nightlife], 
     'Famous white sand beach with vibrant nightlife and water activities', 6000).
@@ -36,6 +30,39 @@ destination(zambales, beach, [beach, surfing, camping, budget, nature, adventure
 destination(iloilo, city_mix, [food, historical, culture, city, island, heritage], 
     'Famous for La Paz Batchoy, historical churches, and islands', 3500).
 
+
+% Nature destinations with high adventure level
+destination(mount_apo, nature, [nature, mountain_climbing, extreme, adventure, wildlife, hiking], 
+    'Highest peak in the Philippines with challenging climbs and unique biodiversity', 3500).
+destination(tubbataha_reef, nature, [nature, diving, unesco, marine_life, extreme, adventure], 
+    'UNESCO World Heritage site with world-class diving and rich marine biodiversity', 7000).
+destination(mayon_volcano, nature, [nature, volcano, hiking, adventure, scenic, extreme], 
+    'Perfect cone-shaped volcano with challenging climbs and stunning views', 3000).
+destination(apo_reef, nature, [nature, diving, snorkeling, marine_life, adventure, remote], 
+    'Second largest contiguous coral reef system in the world', 5500).
+
+
+% Nature destinations good for June travel
+destination(elnido, nature, [beach, nature, island_hopping, lagoon, adventure, scenic], 
+    'Paradise of limestone cliffs, hidden lagoons, and pristine beaches', 5000).
+destination(apo_island, nature, [nature, diving, snorkeling, marine_life, family, adventure], 
+    'Marine sanctuary with sea turtle encounters and diverse marine life', 4000).
+destination(mount_pulag, nature, [nature, mountain, hiking, sunrise, adventure, scenic], 
+    'Sea of Clouds phenomenon and challenging high-altitude trek', 2500).
+destination(taal_volcano, nature, [nature, volcano, hiking, adventure, scenic, historical], 
+    'Smallest active volcano with horseback riding and crater lake view', 2800).
+
+% More family-friendly nature destinations
+destination(puerto_princesa, nature, [nature, underground_river, unesco, family, adventure, wildlife], 
+    'Home to the Underground River, wildlife safari, and firefly watching', 4200).
+destination(tagaytay, nature, [nature, cool_weather, family, scenic, food, adventure], 
+    'Scenic views of Taal Volcano, cool climate, and gourmet restaurants', 3200).
+destination(lake_sebu, nature, [nature, lake, culture, family, adventure, waterfalls], 
+    'Seven waterfalls, Tboli culture, and zipline adventure', 2300).
+destination(camiguin, nature, [nature, island, volcano, waterfalls, springs, family], 
+    'Island born of fire with volcanoes, hot springs, and white sand beaches', 3800).
+
+
 % COST BREAKDOWN PER DESTINATION (in PHP per day)
 % Format: cost_breakdown(Destination, Accommodation, Food, Activities, Transportation, Miscellaneous)
 cost_breakdown(boracay, 2500, 1500, 1200, 500, 300).
@@ -54,6 +81,19 @@ cost_breakdown(banaue, 600, 400, 400, 400, 200).
 cost_breakdown(zambales, 600, 400, 300, 400, 100).
 cost_breakdown(iloilo, 1200, 800, 600, 600, 200).
 
+cost_breakdown(mount_apo, 1000, 800, 1000, 500, 200).
+cost_breakdown(tubbataha_reef, 3000, 1500, 2000, 400, 100).
+cost_breakdown(mayon_volcano, 1200, 700, 800, 200, 100).
+cost_breakdown(apo_reef, 2500, 1200, 1500, 500, 200).
+cost_breakdown(elnido, 2000, 1200, 1400, 300, 100).
+cost_breakdown(apo_island, 1500, 800, 1200, 400, 100).
+cost_breakdown(mount_pulag, 800, 600, 800, 300, 100).
+cost_breakdown(taal_volcano, 1200, 700, 700, 200, 100).
+cost_breakdown(puerto_princesa, 1600, 900, 1200, 400, 100).
+cost_breakdown(tagaytay, 1400, 800, 700, 300, 100).
+cost_breakdown(lake_sebu, 1000, 600, 500, 300, 100).
+cost_breakdown(camiguin, 1500, 800, 1000, 400, 100).
+
 % FAMILY FRIENDLINESS SCORE (1-5)
 family_score(boracay, 4).
 family_score(palawan, 5).
@@ -70,6 +110,18 @@ family_score(sagada, 3).
 family_score(banaue, 4).
 family_score(zambales, 4).
 family_score(iloilo, 5).
+family_score(mount_apo, 2).       % Too extreme for most families
+family_score(tubbataha_reef, 3).  % Requires advanced diving skills
+family_score(mayon_volcano, 3).   % Challenging climb
+family_score(apo_reef, 3).        % Remote location
+family_score(elnido, 4).          % Good for families with older kids
+family_score(apo_island, 5).      % Great for family snorkeling
+family_score(mount_pulag, 3).     % High altitude, challenging
+family_score(taal_volcano, 4).    % Family-friendly with horseback option
+family_score(puerto_princesa, 5). % Excellent for families
+family_score(tagaytay, 5).        % Perfect for families
+family_score(lake_sebu, 4).       % Good for adventurous families
+family_score(camiguin, 5).        % Great for families
 
 % ADVENTURE LEVEL (1-5)
 adventure_level(boracay, 2).
@@ -87,6 +139,19 @@ adventure_level(sagada, 4).
 adventure_level(banaue, 3).
 adventure_level(zambales, 3).
 adventure_level(iloilo, 2).
+adventure_level(mount_apo, 5).       % Extreme mountain climbing
+adventure_level(tubbataha_reef, 5).  % Extreme diving
+adventure_level(mayon_volcano, 5).   % Extreme volcano climbing
+adventure_level(apo_reef, 4).        % Advanced diving
+adventure_level(elnido, 4).          % Island adventure
+adventure_level(apo_island, 3).      % Moderate marine adventure
+adventure_level(mount_pulag, 4).     % High altitude adventure
+adventure_level(taal_volcano, 3).    % Moderate volcano adventure
+adventure_level(puerto_princesa, 3). % Moderate nature adventure
+adventure_level(tagaytay, 2).        % Relaxing scenic adventure
+adventure_level(lake_sebu, 4).       % Waterfalls and zipline adventure
+adventure_level(camiguin, 3).        % Island nature adventure
+
 
 % BEST TIME TO VISIT (months)
 best_time(boracay, [11, 12, 1, 2, 3, 4]).
@@ -104,6 +169,18 @@ best_time(sagada, [1, 2, 3, 4, 11, 12]).
 best_time(banaue, [4, 5, 6, 7, 8]).
 best_time(zambales, [1, 2, 3, 4, 11, 12]).
 best_time(iloilo, [1, 2, 3, 4, 12]).
+best_time(mount_apo, [1, 2, 3, 4, 5]).        % Dry season for climbing
+best_time(tubbataha_reef, [3, 4, 5, 6]).      % Liveaboard season
+best_time(mayon_volcano, [1, 2, 3, 4, 5]).    % Dry season
+best_time(apo_reef, [3, 4, 5, 6, 7, 8, 9]).   % Calmer seas
+best_time(elnido, [1, 2, 3, 4, 5, 6, 11, 12]). % Extended good season
+best_time(apo_island, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]). % Year-round
+best_time(mount_pulag, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]). % Year-round
+best_time(taal_volcano, [1, 2, 3, 4, 5, 6, 11, 12]). % Good weather months
+best_time(puerto_princesa, [1, 2, 3, 4, 5, 6, 11, 12]). % Extended season
+best_time(tagaytay, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]). % Year-round cool
+best_time(lake_sebu, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]). % Year-round
+best_time(camiguin, [1, 2, 3, 4, 5, 6, 11, 12]). % Good weather months
 
 % ACTIVITY CATEGORIES
 activity_category(beach_activities, beach).
@@ -121,7 +198,7 @@ activity_category(shopping, city).
 activity_category(food_tours, city).
 activity_category(nightlife, city).
 
-% ==================== CONVERSATIONAL INTERFACE ====================
+
 
 % Main conversation flow
 conversational_recommender :-
@@ -284,7 +361,7 @@ filter_by_family(Dest) :-
         Score >= 4
     ).
 
-% Filter by adventure level
+
 filter_by_adventure(Dest) :-
     user_preference(adventure_level, AdventurePref),
     (AdventurePref == any -> true ;
@@ -305,7 +382,7 @@ filter_by_adventure(Dest) :-
         Score >= 4
     ).
 
-% Filter by travel month
+
 filter_by_month(Dest) :-
     user_preference(month, MonthPref),
     (MonthPref == any -> true ;
@@ -330,7 +407,7 @@ show_recommendations(Destinations) :-
         show_detailed_recommendations(Destinations)
     ).
 
-% Show detailed recommendations for normal budget
+
 show_detailed_recommendations([]).
 show_detailed_recommendations([Dest|Rest]) :-
     destination(Dest, Type, Tags, Desc, DailyCost),
@@ -364,7 +441,7 @@ show_detailed_recommendations([Dest|Rest]) :-
     
     show_detailed_recommendations(Rest).
 
-% Show budget options for low budget
+
 show_budget_options(Destinations) :-
     % Sort destinations by daily cost
     predsort(compare_by_cost, Destinations, SortedDestinations),
@@ -493,7 +570,7 @@ show_quick_recommendations([Days-Dest|Rest]) :-
     
     show_quick_recommendations(Rest).
 
-% ==================== MENU SYSTEM ====================
+
 
 % Display main menu
 display_main_menu :-
@@ -560,7 +637,7 @@ process_menu_choice(_) :-
     press_any_key,
     main_menu.
 
-% List all destinations
+
 list_all_destinations :-
     findall(Dest, destination(Dest, _, _, _, _), Dests),
     list_destinations(Dests).
@@ -580,7 +657,6 @@ list_destinations([Dest|Rest]) :-
     
     list_destinations(Rest).
 
-% Find cheapest destinations
 find_cheapest_destinations :-
     findall(Cost-Dest, (
         destination(Dest, _, _, _, DailyCost),
@@ -604,7 +680,7 @@ show_cheapest([Cost-Dest|Rest]) :-
     
     show_cheapest(Rest).
 
-% Find most family-friendly destinations
+
 find_most_family_friendly :-
     findall(Score-Dest, (
         destination(Dest, _, _, _, _),
@@ -628,21 +704,20 @@ show_family_friendly([Score-Dest|Rest]) :-
     
     show_family_friendly(Rest).
 
-% Press any key to continue
+
 press_any_key :-
     nl,
     write('Press Enter to continue...'),
     read(_).
 
-% Main menu loop
+
 main_menu :-
     display_main_menu,
     read(Choice),
     process_menu_choice(Choice).
 
-% ==================== STARTUP ====================
 
-% Start the program
+
 start :-
     main_menu.
 
