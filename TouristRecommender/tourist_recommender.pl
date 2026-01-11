@@ -198,6 +198,11 @@ activity_category(shopping, city).
 activity_category(food_tours, city).
 activity_category(nightlife, city).
 
+type_alias(mountain, nature).
+type_alias(mountain, mountain).
+type_alias(nature, nature).
+type_alias(nature, mountain).
+
 
 
 % Main conversation flow
@@ -315,6 +320,67 @@ ask_travel_month :-
     ),
     nl.
 
+
+
+
+matches_preferences(Dest) :-
+    destination(Dest, Type, _, _, _),
+    filter_by_type(Type),
+    filter_by_family(Dest),
+    filter_by_adventure(Dest),
+    filter_by_month(Dest).
+
+
+explain_budget_insufficient(PreferenceMatches, Budget) :-
+    write('Sorry, your budget is insufficient for the destinations that match your preferences.'), nl, nl,
+
+    findall(Cost-Dest, (
+        member(Dest, PreferenceMatches),
+        destination(Dest, _, _, _, Cost)
+    ), Costs),
+
+    keysort(Costs, Sorted),
+    Sorted = [CheapestCost-CheapestDest | _],
+
+    format('The cheapest destination that fits your preferences is ~w.', [CheapestDest]), nl,
+    format('Daily cost: PHP ~w', [CheapestCost]), nl,
+    format('Your budget: PHP ~w', [Budget]), nl, nl,
+
+    NeededDays is ceiling(CheapestCost / Budget),
+    NeededBudget is CheapestCost,
+
+    format('You need at least PHP ~w to stay for 1 day.', [NeededBudget]), nl, nl,
+
+    write('Here are some popular alternatives you may consider:'), nl, nl,
+    show_top_popular_destinations.
+
+
+
+explain_no_preference_match :-
+    write('Sorry, no destinations match all your selected preferences.'), nl,
+    write('Your preferences may be too specific.'), nl, nl,
+    write('Here are some popular destinations instead:'), nl, nl,
+    show_top_popular_destinations.
+
+
+show_top_popular_destinations :-
+    findall(Score-Dest, (
+        destination(Dest, _, _, _, Cost),
+        family_score(Dest, Fam),
+        adventure_level(Dest, Adv),
+        Score is Fam + Adv - (Cost / 2000)
+    ), Scored),
+
+    keysort(Scored, Sorted),
+    reverse(Sorted, Top),
+    take(3, Top, Top3),
+
+    show_alternative_destinations(Top3).
+
+
+
+
+
 % ==================== RECOMMENDATION ENGINE ====================
 
 % Generate recommendations based on preferences
@@ -322,29 +388,30 @@ generate_recommendations :-
     write('\n=============================================================='), nl,
     write('              ANALYZING YOUR PREFERENCES...                  '), nl,
     write('=============================================================='), nl, nl,
+
+    user_preference(budget, Budget),
     
-    % Get filtered destinations
+
+    findall(Dest, matches_preferences(Dest), PreferenceMatches),
+    
+
     findall(Dest, (
-        destination(Dest, Type, _Tags, _Desc, DailyCost),
-        filter_by_type(Type),
-        filter_by_family(Dest),
-        filter_by_adventure(Dest),
-        filter_by_month(Dest),
-        calculate_max_days(Dest, DailyCost, MaxDays),
+        matches_preferences(Dest),
+        destination(Dest, _, _, _, DailyCost),
+        MaxDays is floor(Budget / DailyCost),
         MaxDays >= 1
-    ), Destinations),
-    
-    % Display results
-    (Destinations = [] ->
-        show_no_recommendations
-        ;
-        show_recommendations(Destinations)
+    ), BudgetMatches),
+
+     ( BudgetMatches \= [] ->
+        show_recommendations(BudgetMatches)
+    ;
+      PreferenceMatches \= [] ->
+        explain_budget_insufficient(PreferenceMatches, Budget)
+    ;
+        explain_no_preference_match
     ),
     
-    % Clean up
     retractall(user_preference(_, _)),
-    
-    % Ask if user wants another recommendation
     ask_another_recommendation.
 
 % Filter by type preference
